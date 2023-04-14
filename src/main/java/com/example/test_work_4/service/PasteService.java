@@ -1,70 +1,56 @@
 package com.example.test_work_4.service;
 
 import com.example.test_work_4.dto.PasteDTO;
-import com.example.test_work_4.exception.NotFoundException;
-import com.example.test_work_4.listener.MessageSender;
-import com.example.test_work_4.listener.PasteMessage;
+import com.example.test_work_4.dto.PasteUrlDTO;
+import com.example.test_work_4.enums.Access;
+import com.example.test_work_4.enums.ExpirationTime;
 import com.example.test_work_4.model.Paste;
 import com.example.test_work_4.repository.PasteRepository;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static com.example.test_work_4.repository.specification.SpecificationPaste.byBody;
+import static com.example.test_work_4.repository.specification.SpecificationPaste.byTitle;
 
 @Service
 public class PasteService {
 
     private PasteRepository pasteRepository;
-    private MessageSender messageSender;
 
-    public PasteService(PasteRepository pasteRepository, MessageSender messageSender) {
+
+    public PasteService(PasteRepository pasteRepository) {
         this.pasteRepository = pasteRepository;
-        this.messageSender = messageSender;
     }
 
-    public PasteDTO createPaste(PasteDTO pasteDTO) {
-        String id = UUID.randomUUID().toString();
-
-        Paste paste = new Paste();
-        paste.setId(id);
-        paste.setContent(pasteDTO.getContent());
-        paste.setCreated_at(LocalDateTime.now());
-        paste.setExpiration_time(pasteDTO.getExpiration_time());
-        paste.setAccess(pasteDTO.getAccess());
-        paste.setUrl("http://my-awesome-pastebin.tld/" + id);
+    public PasteUrlDTO createPaste(PasteDTO pasteDTO, Access access, ExpirationTime expirationTime) {
+        Paste paste = pasteDTO.to();
+        paste.setUrl(UUID.randomUUID().toString());
+        paste.setExpiration(Instant.now().plus(expirationTime.getDuration()));
+        paste.setAccess(access);
         pasteRepository.save(paste);
+        return PasteUrlDTO.from(paste);
+    }
 
-        PasteMessage pasteMessage = new PasteMessage();
-        pasteMessage.setPasteId(id);
-        messageSender.sendMessage(pasteMessage);
-
+    public List<PasteDTO> getTenPublicPastes() {
+        return pasteRepository.findAllByStatusPublic().stream().map(PasteDTO::from).collect(Collectors.toList());
+    }
+    public PasteDTO searchPastesByUrl(String url) {
+        Paste paste = pasteRepository.findPasteByUrl(url).orElseThrow(RuntimeException::new);
         return PasteDTO.from(paste);
     }
-
-    public PasteDTO getPasteById(String id) {
-        Optional<Paste> pasteOptional = pasteRepository.findById(id);
-        if (!pasteOptional.isPresent()) {
-            throw new NotFoundException("Paste not found");
-        }
-        Paste paste = pasteOptional.get();
-        return PasteDTO.from(paste);
+    public List<PasteDTO> getByTitleOrContent(String title, String content) {
+        return pasteRepository.findAll(Specification.where(
+                                byTitle(title))
+                        .and(byBody(content)))
+                .stream()
+                .map(PasteDTO::from)
+                .collect(Collectors.toList());
     }
 
-    public void deletePasteById(String id) {
-        pasteRepository.deleteById(id);
-    }
-
-    public List<PasteDTO> getPublicPastes() {
-        List<Paste> pastes = pasteRepository.findByAccess("public");
-        List<PasteDTO> pasteDTOs = new ArrayList<>();
-        for (Paste paste : pastes) {
-            pasteDTOs.add(PasteDTO.from(paste));
-        }
-        return pasteDTOs;
-    }
 }
 
