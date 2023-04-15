@@ -5,8 +5,10 @@ import com.example.test_work_4.model.Paste;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
+import java.time.Instant;
+
 public class SpecificationPaste {
-    public static Specification<Paste> byTitle(String title){
+    public static Specification<Paste> byTitle(String title) {
         return StringUtils.hasText(title) ? (root, query, criteriaBuilder) ->
                 criteriaBuilder.and(
                         criteriaBuilder.equal(root.get("title"), title),
@@ -14,7 +16,7 @@ public class SpecificationPaste {
                 ) : null;
     }
 
-    public static Specification<Paste> byBody(String content){
+    public static Specification<Paste> byBody(String content) {
         return StringUtils.hasText(content) ? (root, query, criteriaBuilder) ->
                 criteriaBuilder.and(
                         criteriaBuilder.like(root.get("content"), "%" + content + "%"),
@@ -22,4 +24,7 @@ public class SpecificationPaste {
                 ) : null;
     }
 
+    public static Specification<Paste> byNotExpired() {
+        return (root, query, cb) -> cb.greaterThan(root.get("expiration"), Instant.now());
+    }
 }

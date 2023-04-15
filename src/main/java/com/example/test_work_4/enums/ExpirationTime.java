@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.time.Duration;
 @Getter
 public enum ExpirationTime {
-    MINUTES_10(Duration.ofMinutes(10)),
+    MINUTES_10(Duration.ofMinutes(1)),
     HOUR_1(Duration.ofHours(1)),
     HOURS_3(Duration.ofHours(3)),
     DAY_1(Duration.ofDays(1)),

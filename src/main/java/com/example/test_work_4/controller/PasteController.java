@@ -1,5 +1,6 @@
 package com.example.test_work_4.controller;
 
+import com.example.test_work_4.dto.CreatePasteDTO;
 import com.example.test_work_4.dto.PasteDTO;
 import com.example.test_work_4.dto.PasteUrlDTO;
 import com.example.test_work_4.enums.Access;
@@ -20,24 +21,30 @@ public class PasteController {
     }
 
     @PostMapping
-    public PasteUrlDTO createPaste(@RequestBody PasteDTO pasteDTO,
-                                   @RequestParam() Access access,
-                                   @RequestParam ExpirationTime expirationTime) {
-        return pasteService.createPaste(pasteDTO, access, expirationTime);
+    public PasteUrlDTO createPaste(@RequestBody CreatePasteDTO createPasteDTO) {
+        return pasteService.createPaste(createPasteDTO);
     }
-
     @GetMapping("/show-ten")
     public List <PasteDTO> getTenPublicPastes() {
         return pasteService.getTenPublicPastes();
     }
     @GetMapping("/{url}")
-    public PasteDTO getPastesByUrl(@PathVariable String url) {
-        return pasteService.searchPastesByUrl(url);
+    public ResponseEntity<PasteDTO> getPastesByUrl(@PathVariable String url) {
+        try {
+            PasteDTO paste = pasteService.searchPastesByUrl(url);
+            return ResponseEntity.ok(paste);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
     @GetMapping("/search")
     public ResponseEntity<List<PasteDTO>> getByTitleOrContent(@RequestParam(required = false) String title,
                                                               @RequestParam(required = false) String content){
-        return ResponseEntity.ok(pasteService.getByTitleOrContent(title, content));
+        try {
+            List<PasteDTO> pastes = pasteService.getByTitleOrContent(title, content);
+            return ResponseEntity.ok(pastes);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
-
 }

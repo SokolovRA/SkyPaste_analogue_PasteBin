@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class PasteScheduler {
 private final PasteRepository pasteRepository;
-
     public PasteScheduler(PasteRepository pasteRepository) {
         this.pasteRepository = pasteRepository;
     }

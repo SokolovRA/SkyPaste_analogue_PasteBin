@@ -19,5 +19,6 @@ public interface PasteRepository extends JpaRepository<Paste, String>, JpaSpecif
     @Override
     List<Paste> findAll(Specification<Paste> specification);
     void deleteAllByExpirationIsBefore(Instant now);
+
 }
 

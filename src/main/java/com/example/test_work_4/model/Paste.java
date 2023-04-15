@@ -1,6 +1,7 @@
 package com.example.test_work_4.model;
 
 import com.example.test_work_4.enums.Access;
+import com.example.test_work_4.enums.ExpirationTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,5 +25,8 @@ public class Paste {
     private Instant expiration;
     @Enumerated(EnumType.STRING)
     private Access access;
+    @Enumerated(EnumType.STRING)
+    private ExpirationTime expirationTime;
+
 
 }
