@@ -5,34 +5,27 @@ import com.example.test_work_4.dto.PasteDTO;
 import com.example.test_work_4.dto.PasteUrlDTO;
 import com.example.test_work_4.enums.Access;
 import com.example.test_work_4.enums.ExpirationTime;
-import com.example.test_work_4.exception.PasteNotFoundException;
 import com.example.test_work_4.model.Paste;
 import com.example.test_work_4.repository.PasteRepository;
-import com.example.test_work_4.service.PasteService;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -42,14 +35,9 @@ public class PasteServiceTest {
     private PasteRepository pasteRepository;
     @InjectMocks
     private PasteService pasteService;
-    private PasteDTO pasteDTO;
-    private Paste paste;
-    private PasteUrlDTO pasteUrlDTO;
-    private CreatePasteDTO createPasteDTO;
-
 
     @Test
-    public void testCreatePaste_shouldReturnUrlOfCreatedPaste() throws Exception {
+    public void testCreatePaste_shouldReturnUrlOfCreatedPaste()  {
         CreatePasteDTO createPasteDTO = new CreatePasteDTO();
         createPasteDTO.setTitle("Test Paste");
         createPasteDTO.setContent("This is a test paste");
@@ -60,9 +48,8 @@ public class PasteServiceTest {
 
         assertNotNull(result.getUrl());
     }
-
     @Test
-    public void testGetTenPublicPastes_returnsListOfPublicPastesWithMaximumSizeOfTen() throws Exception {
+    public void testGetTenPublicPastes_returnsListOfPublicPastesWithMaximumSizeOfTen()  {
         List<Paste> pastaList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Paste pasta = new Paste();
@@ -78,9 +65,8 @@ public class PasteServiceTest {
         List<PasteDTO> pastaDTOList = pasteService.getTenPublicPastes();
         assertEquals(5, pastaDTOList.size());
     }
-
     @Test
-    public void testFindByUrl() {
+    public void testSearchPastesByUrl_ReturnsCorrectPasteDTOWithAccess() {
         String url = RandomStringUtils.randomAlphabetic(15);
         String title = "Title";
         String content = "Content";
@@ -107,15 +93,15 @@ public class PasteServiceTest {
     }
     @Test
     public void getByTitleOrContent_ReturnsCorrectPasteDTOWithUrl(){
-        paste = new Paste();
+        Paste paste = new Paste();
         paste.setTitle("test title");
         paste.setContent("test content");
         paste.setExpirationTime(ExpirationTime.DAY_1);
         paste.setUrl("test-url");
 
-        pasteDTO = PasteDTO.from(paste);
+        PasteDTO pasteDTO = PasteDTO.from(paste);
 
-        createPasteDTO = new CreatePasteDTO();
+        CreatePasteDTO createPasteDTO = new CreatePasteDTO();
         createPasteDTO.setTitle("test title");
         createPasteDTO.setContent("test content");
         createPasteDTO.setExpirationTime(ExpirationTime.DAY_1);

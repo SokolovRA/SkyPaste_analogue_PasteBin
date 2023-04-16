@@ -9,9 +9,7 @@ import com.example.test_work_4.model.Paste;
 import com.example.test_work_4.repository.PasteRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;

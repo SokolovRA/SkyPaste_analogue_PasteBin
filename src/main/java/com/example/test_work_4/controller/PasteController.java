@@ -3,8 +3,6 @@ package com.example.test_work_4.controller;
 import com.example.test_work_4.dto.CreatePasteDTO;
 import com.example.test_work_4.dto.PasteDTO;
 import com.example.test_work_4.dto.PasteUrlDTO;
-import com.example.test_work_4.enums.Access;
-import com.example.test_work_4.enums.ExpirationTime;
 import com.example.test_work_4.service.PasteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

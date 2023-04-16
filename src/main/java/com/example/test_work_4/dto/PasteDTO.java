@@ -10,7 +10,6 @@ import lombok.Setter;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.time.Instant;
-import java.util.Objects;
 
 @Getter
 @Setter
