@@ -4,6 +4,8 @@ import com.example.test_work_4.model.Paste;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 public class PasteUrlDTO {

@@ -11,6 +11,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import java.time.Instant;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -28,5 +29,16 @@ public class Paste {
     @Enumerated(EnumType.STRING)
     private ExpirationTime expirationTime;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Paste paste = (Paste) o;
+        return Objects.equals(url, paste.url) && Objects.equals(title, paste.title) && Objects.equals(content, paste.content) && Objects.equals(created, paste.created) && Objects.equals(expiration, paste.expiration) && access == paste.access && expirationTime == paste.expirationTime;
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(url, title, content, created, expiration, access, expirationTime);
+    }
 }
