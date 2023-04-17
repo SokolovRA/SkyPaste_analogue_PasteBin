@@ -14,11 +14,4 @@ public class PasteUrlDTO {
         pasteUrlDTO.setUrl("http://my-awesome-pastebin.tld/" + paste.getUrl());
         return pasteUrlDTO;
     }
-
-    public PasteDTO to() {
-        PasteDTO pasteDTO = new PasteDTO();
-        pasteDTO.setUrl(this.getUrl());
-        return pasteDTO;
-
-    }
 }

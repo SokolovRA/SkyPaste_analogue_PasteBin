@@ -33,13 +33,4 @@ public class PasteDTO {
         dto.setExpiration(paste.getExpiration());
         dto.setAccess(paste.getAccess());
         return dto; }
-    public Paste to() {
-        Paste paste = new Paste();
-        paste.setUrl(this.getUrl());
-        paste.setContent(this.getContent());
-        paste.setTitle(this.getTitle());
-        paste.setExpiration(this.getExpiration());
-        paste.setAccess(this.getAccess());
-        return paste;
-    }
 }
