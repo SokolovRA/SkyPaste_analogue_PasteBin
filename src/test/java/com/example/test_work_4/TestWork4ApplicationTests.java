@@ -7,11 +7,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Testcontainers
 class TestWork4ApplicationTests {
 
     @Test
     void contextLoads() {
     }
-
 }

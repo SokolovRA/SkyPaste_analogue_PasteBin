@@ -3,6 +3,7 @@ package com.example.test_work_4.service;
 import com.example.test_work_4.dto.CreatePasteDTO;
 import com.example.test_work_4.dto.PasteDTO;
 import com.example.test_work_4.dto.PasteUrlDTO;
+import com.example.test_work_4.enums.Access;
 import com.example.test_work_4.exception.PasteBadRequestException;
 import com.example.test_work_4.exception.PasteNotFoundException;
 import com.example.test_work_4.model.Paste;
@@ -34,11 +35,10 @@ public class PasteService {
         return PasteUrlDTO.from(paste);
     }
     public List<PasteDTO> getTenPublicPastes() {
-        return pasteRepository.findAllByStatusPublic().stream().map(PasteDTO::from).collect(Collectors.toList());
+        return pasteRepository.findTop10ByAccessAndExpirationAfterOrderByCreatedDesc(Access.PUBLIC, Instant.now()).stream().map(PasteDTO::from).collect(Collectors.toList());
     }
     public PasteDTO searchPastesByUrl(String url) {
-        Paste paste = pasteRepository.findPasteByUrl(url)
-                .filter(p -> p.getExpiration().isAfter(Instant.now()))
+        Paste paste = pasteRepository.findPasteByUrlAndExpirationAfter(url, Instant.now())
                 .orElseThrow(PasteNotFoundException::new);
         return PasteDTO.from(paste);
     }

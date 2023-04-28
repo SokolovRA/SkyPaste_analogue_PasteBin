@@ -1,6 +1,6 @@
 package com.example.test_work_4.service;
 
-import com.example.test_work_4.config.DockerConfig;
+import com.example.test_work_4.DockerConfig;
 import com.example.test_work_4.dto.CreatePasteDTO;
 import com.example.test_work_4.dto.PasteDTO;
 import com.example.test_work_4.dto.PasteUrlDTO;
@@ -9,7 +9,11 @@ import com.example.test_work_4.enums.ExpirationTime;
 import com.example.test_work_4.model.Paste;
 import com.example.test_work_4.repository.PasteRepository;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -17,14 +21,21 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @Testcontainers
-public class PasteServiceTest extends DockerConfig {
+public class PasteServiceTest  extends DockerConfig {
     @Autowired
     private PasteService pasteService;
     @Autowired
@@ -68,5 +79,6 @@ public class PasteServiceTest extends DockerConfig {
         assertEquals(expectedPasteDTO, actualPasteDTO);
     }
 }
+
 
 

@@ -1,4 +1,4 @@
-package com.example.test_work_4.config;
+package com.example.test_work_4;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;

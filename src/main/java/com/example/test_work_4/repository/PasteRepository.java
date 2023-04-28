@@ -1,5 +1,7 @@
 package com.example.test_work_4.repository;
 
+
+import com.example.test_work_4.enums.Access;
 import com.example.test_work_4.model.Paste;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,9 +15,8 @@ import java.util.Optional;
 
 @Repository
 public interface PasteRepository extends JpaRepository<Paste, String>, JpaSpecificationExecutor<Paste> {
-    @Query(value = "select * from paste p where p.access in ('PUBLIC') order by created desc limit 10", nativeQuery = true)
-    List<Paste> findAllByStatusPublic();
-    Optional<Paste> findPasteByUrl(String url);
+    List<Paste> findTop10ByAccessAndExpirationAfterOrderByCreatedDesc(Access status, Instant date);
+    Optional<Paste> findPasteByUrlAndExpirationAfter(String url, Instant now);
     @Override
     List<Paste> findAll(Specification<Paste> specification);
     void deleteAllByExpirationIsBefore(Instant now);
