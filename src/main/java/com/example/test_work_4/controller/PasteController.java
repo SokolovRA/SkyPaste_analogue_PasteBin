@@ -1,10 +1,13 @@
 package com.example.test_work_4.controller;
 
+import com.example.test_work_4.dto.CreatePasteDTO;
 import com.example.test_work_4.dto.PasteDTO;
+import com.example.test_work_4.dto.PasteUrlDTO;
 import com.example.test_work_4.service.PasteService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/pastes")
@@ -16,22 +19,30 @@ public class PasteController {
     }
 
     @PostMapping
-    public ResponseEntity<PasteDTO> createPaste(@RequestBody PasteDTO pasteDTO) {
-        PasteDTO createdPaste = pasteService.createPaste(pasteDTO);
-        return new ResponseEntity<>(createdPaste, HttpStatus.CREATED);
+    public PasteUrlDTO createPaste(@RequestBody CreatePasteDTO createPasteDTO) {
+        return pasteService.createPaste(createPasteDTO);
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<PasteDTO> getPasteById(@PathVariable String id) {
-        PasteDTO paste = pasteService.getPasteById(id);
-        return new ResponseEntity<>(paste, HttpStatus.OK);
+    @GetMapping("/show-ten")
+    public List <PasteDTO> getTenPublicPastes() {
+        return pasteService.getTenPublicPastes();
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePasteById(@PathVariable String id) {
-        pasteService.deletePasteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @GetMapping("/{url}")
+    public ResponseEntity<PasteDTO> getPastesByUrl(@PathVariable String url) {
+        try {
+            PasteDTO paste = pasteService.searchPastesByUrl(url);
+            return ResponseEntity.ok(paste);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @GetMapping("/search")
+    public ResponseEntity<List<PasteDTO>> getByTitleOrContent(@RequestParam(required = false) String title,
+                                                              @RequestParam(required = false) String content){
+        try {
+            List<PasteDTO> pastes = pasteService.getByTitleOrContent(title, content);
+            return ResponseEntity.ok(pastes);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
-
-

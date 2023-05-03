@@ -1,25 +1,32 @@
 package com.example.test_work_4.model;
 
 import com.example.test_work_4.enums.Access;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import lombok.Data;
+import com.example.test_work_4.enums.ExpirationTime;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import java.time.Instant;
+
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Paste {
     @Id
-    private String id;
+    private String url;
+    private String title;
     private String content;
-    private LocalDateTime created_at;
-    private LocalDateTime expiration_time;
+    private Instant created = Instant.now();
+    private Instant expiration;
     @Enumerated(EnumType.STRING)
     private Access access;
-    private String url;
+    @Enumerated(EnumType.STRING)
+    private ExpirationTime expirationTime;
+
 
 }
